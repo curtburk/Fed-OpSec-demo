@@ -9,7 +9,7 @@
 
 ## The Problem
 
-Your analysts are already using AI tools for OPSEC review—ChatGPT, Copilot, and other consumer AI services. But these tools:
+Your analysts are doing OpSec reviews either manually, or worse yet already using AI tools for OPSEC review—ChatGPT, Copilot, and other consumer AI services. But these tools:
 
 - **Send sensitive data to the cloud** — Every communication leaves your network
 - **Lack military context** — No understanding of DoD OPSEC doctrine
