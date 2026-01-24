@@ -304,9 +304,9 @@ Compare consumer AI vs mission-built analysis
 
 ## Contact
 
-**Curtis Burke**  
-HP ZGX Nano Product Manager  
-Demo inquiries: [your-email]
+**Curtis Burkhalter**  
+HP ZGX Nano Technical PMM
+Demo inquiries: curtis.burkhalter@hp.com OR curtisburkhalter@gmail.com
 
 ---
 
