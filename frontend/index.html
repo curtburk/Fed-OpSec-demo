@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPSEC Validator - AI-Powered Operations Security Analysis</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --accent: #c53030;
+            --accent-light: #e53e3e;
+            --success: #276749;
+            --warning: #c05621;
+            --bg-dark: #1a202c;
+            --bg-card: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #a0aec0;
+            --border: #4a5568;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1117 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 20px 0;
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .shield-icon {
+            font-size: 48px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-badge.ready {
+            background: rgba(39, 103, 73, 0.3);
+            border: 1px solid var(--success);
+            color: #68d391;
+        }
+        
+        .status-badge.loading {
+            background: rgba(192, 86, 33, 0.3);
+            border: 1px solid var(--warning);
+            color: #fbd38d;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.ready { background: #68d391; }
+        .status-dot.loading { background: #fbd38d; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Main Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Input Section */
+        .input-section {
+            grid-column: 1 / -1;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+        
+        textarea::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(197, 48, 48, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+        
+        /* Sample Buttons */
+        .sample-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .sample-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .sample-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-sample {
+            padding: 8px 14px;
+            font-size: 12px;
+            background: rgba(44, 82, 130, 0.3);
+            border: 1px solid var(--primary-light);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-sample:hover {
+            background: var(--primary-light);
+        }
+        
+        /* Results */
+        .results-grid {
+            display: contents;
+        }
+        
+        .result-card {
+            min-height: 400px;
+        }
+        
+        .result-card.generic .card-header {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .result-card.opsec .card-header {
+            border-left: 4px solid var(--success);
+        }
+        
+        /* Risk Badge */
+        .risk-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .risk-CRITICAL { background: #742a2a; color: #feb2b2; }
+        .risk-HIGH { background: #744210; color: #fbd38d; }
+        .risk-MEDIUM { background: #5a4a00; color: #faf089; }
+        .risk-LOW { background: #22543d; color: #9ae6b4; }
+        .risk-CLEAN { background: #1a4731; color: #68d391; }
+        .risk-UNKNOWN { background: var(--border); color: var(--text-secondary); }
+        .risk-ERROR { background: #742a2a; color: #feb2b2; }
+        
+        /* Violation List */
+        .violation-list {
+            margin-top: 16px;
+        }
+        
+        .violation-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .violation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .violation-category {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .severity-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .severity-CRITICAL { background: #742a2a; color: #feb2b2; }
+        .severity-HIGH { background: #744210; color: #fbd38d; }
+        .severity-MEDIUM { background: #5a4a00; color: #faf089; }
+        .severity-LOW { background: #22543d; color: #9ae6b4; }
+        .severity-UNKNOWN { background: var(--border); color: var(--text-secondary); }
+        
+        .violation-text {
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            background: var(--bg-dark);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+            color: #fc8181;
+            word-break: break-word;
+        }
+        
+        .violation-explanation {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        
+        .violation-recommendation {
+            font-size: 13px;
+            color: #68d391;
+            font-style: italic;
+        }
+        
+        /* Summary Section */
+        .summary-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .summary-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .processing-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
+        /* Comparison Summary */
+        .comparison-summary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(39, 103, 73, 0.2) 0%, rgba(26, 54, 93, 0.2) 100%);
+            border: 1px solid var(--success);
+        }
+        
+        .comparison-summary .card-header {
+            background: rgba(39, 103, 73, 0.3);
+        }
+        
+        .improvement-text {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Loading State */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="shield-icon">🛡️</div>
+                    <div>
+                        <h1>OPSEC VALIDATOR</h1>
+                        <div class="subtitle">AI-Powered Operations Security Analysis • Rocky Mountain CyberSpace Symposium 2026</div>
+                    </div>
+                </div>
+                <div class="status-section">
+                    <div id="modelStatus" class="status-badge loading">
+                        <div class="status-dot loading"></div>
+                        <span>Checking Model...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-grid">
+            <!-- Input Section -->
+            <div class="card input-section">
+                <div class="card-header">
+                    <div class="card-title">
+                        📝 Communication Input
+                    </div>
+                    <button class="btn btn-secondary" onclick="clearInput()">Clear</button>
+                </div>
+                <div class="card-body">
+                    <textarea 
+                        id="inputText" 
+                        placeholder="Paste military communication, email, social media post, or SITREP here for OPSEC analysis..."
+                    ></textarea>
+                    
+                    <div class="btn-group">
+                        <button id="analyzeBtn" class="btn btn-primary" onclick="runComparison()">
+                            🔍 Analyze & Compare
+                        </button>
+                        <button class="btn btn-secondary" onclick="loadModel()">
+                            ⚡ Load Model
+                        </button>
+                    </div>
+                    
+                    <div class="sample-section">
+                        <div class="sample-label">Load Sample Communication:</div>
+                        <div class="sample-buttons" id="sampleButtons">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Grid -->
+            <div class="results-grid" id="resultsGrid">
+                <!-- Generic Result -->
+                <div class="card result-card generic">
+                    <div class="card-header">
+                        <div class="card-title">
+                            ⚠️ Generic Prompt Analysis
+                        </div>
+                        <span id="genericRisk" class="risk-badge risk-UNKNOWN">--</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="genericResult" class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <p>Run analysis to see generic prompt results</p>
+                            <p style="font-size: 12px; margin-top: 8px;">Baseline detection without military context</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- OPSEC Result -->
+                <div class="card result-card opsec">
+                    <div class="card-header">
+                        <div class="card-title">
+                            ✅ OPSEC-Specific Analysis
+                        </div>
+                        <span id="opsecRisk" class="risk-badge risk-UNKNOWN">--</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="opsecResult" class="empty-state">
+                            <div class="empty-state-icon">🎯</div>
+                            <p>Run analysis to see OPSEC-specific results</p>
+                            <p style="font-size: 12px; margin-top: 8px;">Military-focused detection with DoD categories</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comparison Summary (hidden until results) -->
+                <div id="comparisonCard" class="card comparison-summary" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            📊 Analysis Comparison
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="comparisonContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>
+            <strong>HP ZGX Nano AI Station</strong> • NVIDIA GB10 Grace Blackwell Superchip • 
+            <strong>Trendyol-Cybersecurity-LLM-Qwen3-32B</strong>
+        </p>
+        <p style="margin-top: 8px;">
+            Demonstrating on-premises AI for secure military communications analysis • Zero cloud dependency • Full data sovereignty
+        </p>
+    </footer>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div id="loadingText">Analyzing communication...</div>
+        </div>
+    </div>
+    
+    <script>
+        // API Configuration
+        const API_URL = 'http://localhost:8000';
+        
+        // Sample texts storage
+        let sampleTexts = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkModelStatus();
+            loadSamples();
+        });
+        
+        // Check model status
+        async function checkModelStatus() {
+            try {
+                const response = await fetch(`${API_URL}/`);
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('modelStatus');
+                if (data.model_loaded) {
+                    statusEl.className = 'status-badge ready';
+                    statusEl.innerHTML = '<div class="status-dot ready"></div><span>Model Ready</span>';
+                } else {
+                    statusEl.className = 'status-badge loading';
+                    statusEl.innerHTML = '<div class="status-dot loading"></div><span>Model Not Loaded</span>';
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('modelStatus');
+                statusEl.className = 'status-badge loading';
+                statusEl.innerHTML = '<div class="status-dot loading"></div><span>API Offline</span>';
+            }
+        }
+        
+        // Load sample texts
+        async function loadSamples() {
+            try {
+                const response = await fetch(`${API_URL}/samples`);
+                const data = await response.json();
+                sampleTexts = data.samples;
+                
+                const container = document.getElementById('sampleButtons');
+                container.innerHTML = sampleTexts.map((sample, index) => `
+                    <button class="btn-sample" onclick="loadSample(${index})">
+                        ${sample.name}
+                    </button>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load samples:', error);
+            }
+        }
+        
+        // Load a sample text
+        function loadSample(index) {
+            if (sampleTexts[index]) {
+                document.getElementById('inputText').value = sampleTexts[index].text;
+            }
+        }
+        
+        // Clear input
+        function clearInput() {
+            document.getElementById('inputText').value = '';
+        }
+        
+        // Load model
+        async function loadModel() {
+            showLoading('Loading model... This may take a few minutes.');
+            try {
+                const response = await fetch(`${API_URL}/load_model`);
+                const data = await response.json();
+                alert(data.status);
+                checkModelStatus();
+            } catch (error) {
+                alert('Failed to load model: ' + error.message);
+            }
+            hideLoading();
+        }
+        
+        // Run comparison analysis
+        async function runComparison() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                alert('Please enter text to analyze');
+                return;
+            }
+            
+            showLoading('Running comparison analysis...');
+            
+            try {
+                const response = await fetch(`${API_URL}/analyze/compare`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, max_tokens: 2048, temperature: 0.1 })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+                
+                const data = await response.json();
+                displayResults(data);
+                
+            } catch (error) {
+                alert('Analysis failed: ' + error.message);
+            }
+            
+            hideLoading();
+        }
+        
+        // Display results
+        function displayResults(data) {
+            // Update risk badges
+            document.getElementById('genericRisk').className = `risk-badge risk-${data.generic_result.risk_assessment}`;
+            document.getElementById('genericRisk').textContent = data.generic_result.risk_assessment;
+            
+            document.getElementById('opsecRisk').className = `risk-badge risk-${data.opsec_result.risk_assessment}`;
+            document.getElementById('opsecRisk').textContent = data.opsec_result.risk_assessment;
+            
+            // Render generic results
+            document.getElementById('genericResult').innerHTML = renderViolations(
+                data.generic_result.violations,
+                data.generic_result.summary,
+                data.generic_result.processing_time,
+                true
+            );
+            
+            // Render OPSEC results
+            document.getElementById('opsecResult').innerHTML = renderViolations(
+                data.opsec_result.violations,
+                data.opsec_result.summary,
+                data.opsec_result.processing_time,
+                false
+            );
+            
+            // Show comparison summary
+            const compCard = document.getElementById('comparisonCard');
+            compCard.style.display = 'block';
+            
+            document.getElementById('comparisonContent').innerHTML = `
+                <p class="improvement-text">${data.improvement_summary}</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">${data.generic_result.violations.length}</div>
+                        <div class="stat-label">Generic Detections</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.opsec_result.violations.length}</div>
+                        <div class="stat-label">OPSEC Detections</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.generic_time}s</div>
+                        <div class="stat-label">Generic Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.opsec_time}s</div>
+                        <div class="stat-label">OPSEC Time</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Render violations list
+        function renderViolations(violations, summary, time, isGeneric) {
+            if (violations.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">${isGeneric ? '🤷' : '✅'}</div>
+                        <p>${isGeneric ? 'No specific items detected' : 'No OPSEC violations detected'}</p>
+                    </div>
+                    <div class="summary-section">
+                        <p class="summary-text">${summary}</p>
+                        <p class="processing-time">Processing time: ${time}s</p>
+                    </div>
+                `;
+            }
+            
+            const violationHtml = violations.map(v => `
+                <div class="violation-item">
+                    <div class="violation-header">
+                        <span class="violation-category">${v.category_name || v.category}</span>
+                        <span class="severity-badge severity-${v.severity}">${v.severity}</span>
+                    </div>
+                    <div class="violation-text">"${escapeHtml(v.text)}"</div>
+                    ${v.explanation ? `<p class="violation-explanation">⚠️ ${v.explanation}</p>` : ''}
+                    ${v.recommendation ? `<p class="violation-recommendation">💡 ${v.recommendation}</p>` : ''}
+                </div>
+            `).join('');
+            
+            return `
+                <div class="violation-list">
+                    ${violationHtml}
+                </div>
+                <div class="summary-section">
+                    <p class="summary-text">${summary}</p>
+                    <p class="processing-time">Processing time: ${time}s</p>
+                </div>
+            `;
+        }
+        
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showLoading(message) {
+            document.getElementById('loadingText').textContent = message;
+            document.getElementById('loadingOverlay').classList.add('active');
+            document.getElementById('analyzeBtn').disabled = true;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+            document.getElementById('analyzeBtn').disabled = false;
+        }
+    </script>
+</body>
+</html>
