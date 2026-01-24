@@ -1,0 +1,82 @@
+### Demo Script
+
+## OPSEC Validator - 3 Minute Demo Script 
+---
+
+### SETUP (before audience arrives)
+- Have the demo loaded with "Patrol SITREP" sample ready
+- Model already warmed up (run one analysis beforehand)
+
+---
+
+### OPENING (30 sec)
+
+*[Gesture to the screen]*
+
+"OPSEC review today is manual. Analysts read communications, apply checklists, flag what they catch. It works—but it's slow. So you can only screen a fraction of what actually goes out.
+
+And your people can't use AI tools like ChatGPT for this, because sensitive data can't go to the cloud. So they're stuck choosing between security and speed.
+
+This demo shows a third option: AI-powered OPSEC review that runs entirely on-premises. Speed of AI, nothing leaves your network."
+
+---
+
+### THE DEMO (1.5 min)
+
+*[Click "Analyze & Compare" - results should take ~90 sec, talk through it]*
+
+"Here's a deployment email—the kind of thing someone might send to family. On the left, we're simulating what a generic AI tool would return. On the right, a purpose-built OPSEC analyzer."
+
+*[While waiting, or after results load]*
+
+**Point to LEFT panel (Consumer AI Tool):**
+
+"The generic approach finds 'sensitive information'—names, dates, locations. But it's just a list. No categorization. No severity. No recommendations. An analyst still has to figure out what matters and what to do about it."
+
+**Point to RIGHT panel (Mission-Built Analyzer):**
+
+"Now look at the mission-built analyzer. Same email, completely different output:
+
+- **UNIT_ID: CRITICAL** — '42nd Infantry Division' with a recommendation to use generic descriptors
+- **LOCATION: CRITICAL** — 'Camp Arifjan, Kuwait' flagged as deployment destination
+- **TIMING: CRITICAL** — 'March 15th' identified as operational schedule
+- **CAPABILITIES: HIGH** — '12 Stryker vehicles, 180 personnel' tagged as force composition
+
+Every finding is categorized by DoD OPSEC doctrine, rated by severity, and includes specific remediation guidance."
+
+---
+
+### THE BUSINESS CASE (45 sec)
+
+"Three things matter here:
+
+**One** — This runs entirely on the HP ZGX Nano. Nothing leaves your network. No cloud. Works in classified environments, works at the edge, works air-gapped.
+
+**Two** — No per-token costs. Run a thousand analyses a day, the cost is the same. That changes the math—you can screen everything, not just spot-check.
+
+**Three** — This took a week to build. The model is open source. The hardware is commercial off-the-shelf. You're not buying a decade-long contract—you're buying a capability you own and control."
+
+---
+
+### CLOSE (15 sec)
+
+"This is what on-premises AI enables: capabilities that were impossible when the only option was cloud. Happy to show you the other samples or talk about how this fits your environment."
+
+---
+
+### IF THEY ASK QUESTIONS
+
+**"How accurate is it?"**
+> "It's not perfect—no AI is. But it catches things humans miss, especially aggregation risks where individual facts seem harmless but combine into a problem. The goal is augmenting analysts, not replacing them."
+
+**"What about classified environments?"**
+> "Everything runs on-premises. The model weights are open source and can go through your security review. No internet connection required after initial setup."
+
+**"How hard is this to customize?"**
+> "The OPSEC categories are defined in configuration—no model retraining needed. If you want to add organization-specific rules or adjust severity thresholds, that's a config change, not a development project."
+
+**"What's the hardware cost?"**
+> "The HP ZGX Nano runs around $3,500. Compare that to cloud API costs at scale—if you're screening hundreds of communications per day, the hardware pays for itself quickly."
+
+**"Is this something we can buy?"**
+> "This is a demo showing what's possible. The hardware is available now. Building something production-ready for your specific environment is a conversation we'd want to have with your team."
