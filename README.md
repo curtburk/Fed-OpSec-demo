@@ -7,14 +7,26 @@
 
 ---
 
-## Overview
+## The Problem
 
-This demo showcases how **prompt engineering** dramatically improves AI detection of OPSEC (Operations Security) violations in military communications. Using the same cybersecurity-tuned model, we compare:
+Your analysts are already using AI tools for OPSEC review—ChatGPT, Copilot, and other consumer AI services. But these tools:
 
-1. **Generic Prompt** — Basic "find sensitive information" approach
-2. **OPSEC-Specific Prompt** — Military doctrine-aligned detection with DoD categories
+- **Send sensitive data to the cloud** — Every communication leaves your network
+- **Lack military context** — No understanding of DoD OPSEC doctrine
+- **Provide inconsistent results** — Generic findings without actionable categorization
+- **Cost per query** — Token-based pricing at scale
 
-The result: Domain-specific prompting unlocks significantly better detection capabilities without any model retraining.
+## The Solution
+
+This demo shows the difference between **consumer AI tools** and a **mission-built OPSEC analyzer** running entirely on-premises.
+
+| Consumer AI Tool | Mission-Built OPSEC Analyzer |
+|------------------|------------------------------|
+| Cloud-based, data leaves network | On-premises, full data sovereignty |
+| Generic "sensitive information" detection | DoD doctrine-aligned categories |
+| Unstructured findings | Severity classification + recommendations |
+| Per-token costs | Unlimited analysis at fixed hardware cost |
+| Requires internet connectivity | Works in air-gapped environments |
 
 ---
 
@@ -25,14 +37,14 @@ The result: Domain-specific prompting unlocks significantly better detection cap
 | Capability | Benefit |
 |------------|---------|
 | **On-Premises Processing** | Sensitive communications never leave your network |
-| **Zero Cloud Dependency** | Works in air-gapped environments |
+| **Zero Cloud Dependency** | Works in classified/air-gapped environments |
 | **No Per-Token Costs** | Unlimited analysis at fixed hardware cost |
-| **Military-Specific Detection** | Categories aligned with DoD OPSEC doctrine |
-| **Real-Time Analysis** | Screen communications before transmission |
+| **DoD OPSEC Categories** | UNIT_ID, LOCATION, TIMING, CAPABILITIES, INTENTIONS, VULNERABILITIES |
+| **Actionable Output** | Severity levels + specific remediation recommendations |
 
 ### Demo Story
 
-> "The same AI model can give vastly different results based on how you ask the question. Generic prompts miss military context. OPSEC-specific prompts, aligned with DoD doctrine, catch violations that generic approaches miss entirely."
+> "Your analysts are already using ChatGPT and Copilot for OPSEC review. Here's what they're missing—and what a purpose-built, on-premises solution delivers."
 
 ---
 
@@ -80,7 +92,7 @@ Open browser to: `http://YOUR_SERVER_IP:8080`
 
 ## OPSEC Categories (DoD Doctrine)
 
-The demo detects violations across six military OPSEC categories:
+The mission-built analyzer detects violations across six military OPSEC categories:
 
 | Category | Description | Severity |
 |----------|-------------|----------|
@@ -126,8 +138,8 @@ The demo includes realistic (fictional) military communications:
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │  Backend API (FastAPI - Port 8000)                  │    │
 │  │  - /analyze/compare (side-by-side analysis)         │    │
-│  │  - /analyze/generic (baseline)                      │    │
-│  │  - /analyze/opsec (military-specific)               │    │
+│  │  - /analyze/generic (consumer AI baseline)          │    │
+│  │  - /analyze/opsec (mission-built analyzer)          │    │
 │  │  - /samples (demo texts)                            │    │
 │  └─────────────────────────────────────────────────────┘    │
 │                              │                               │
@@ -161,41 +173,42 @@ The demo includes realistic (fictional) military communications:
 
 1. **Cybersecurity-Native** — Fine-tuned specifically on security data
 2. **Military-Relevant Training** — Includes threat intel, MITRE ATT&CK, incident reports
-3. **Qwen3 Architecture** — Latest model with thinking/non-thinking modes
-4. **GGUF Available** — Works with llama-cpp-python for local inference
+3. **Qwen3 Architecture** — Latest model with optimized inference
+4. **GGUF Available** — Works with llama-cpp-python for local deployment
 
 ---
 
 ## Demo Script (5-minute presentation)
 
 ### Opening (30 sec)
-> "OPSEC violations in military communications are a persistent threat. AI can help—but only if we ask the right questions."
+> "Your analysts are already using AI for OPSEC review. They're pasting messages into ChatGPT, Copilot, whatever's available. But there's a problem—that data is leaving your network, and the results aren't built for military operations."
 
-### Show Generic Analysis (1 min)
+### Show Consumer AI Results (1 min)
 1. Load "Deployment Email" sample
-2. Run generic analysis
-3. Note: Catches some items, but lacks military context
+2. Click "Analyze & Compare"
+3. Point to left panel: "This is what a consumer AI tool finds—generic sensitive information without military context."
 
-### Show OPSEC Analysis (1 min)  
-1. Same text, OPSEC-specific prompt
-2. Highlights: Proper categorization, severity levels, actionable recommendations
+### Show Mission-Built Results (1 min)  
+1. Point to right panel: "Now look at the mission-built analyzer."
+2. Highlight: DoD OPSEC categories, severity classification, specific recommendations
+3. "Same communication, dramatically different actionable intelligence."
 
-### Key Comparison (1 min)
-> "Same model, same text—dramatically different results. The OPSEC prompt:
-> - Uses DoD doctrine categories
-> - Provides severity classification
-> - Offers specific recommendations
-> - Catches context-dependent violations"
+### Key Differentiators (1 min)
+> "The mission-built solution provides:
+> - Categories aligned with DoD OPSEC doctrine
+> - Severity classification for prioritization  
+> - Specific remediation recommendations
+> - All running entirely on-premises"
 
 ### Business Value (1 min)
-> "This runs entirely on-premises on the HP ZGX Nano:
-> - Zero cloud dependency
-> - No per-token costs
-> - Full data sovereignty
-> - Works in classified environments"
+> "This runs on the HP ZGX Nano AI Station:
+> - Zero cloud dependency—works in classified environments
+> - No per-token costs—unlimited analysis
+> - Full data sovereignty—nothing leaves your network
+> - Portable—takes this capability to the edge"
 
 ### Close (30 sec)
-> "Prompt engineering isn't just about getting better answers—it's about unlocking domain expertise that's already in the model."
+> "The question isn't whether your analysts will use AI for OPSEC review—they already are. The question is whether you give them consumer tools or mission-built capabilities."
 
 ---
 
@@ -259,7 +272,7 @@ Get OPSEC category definitions
 Get sample military communications
 
 ### POST /analyze/compare
-Compare generic vs OPSEC analysis
+Compare consumer AI vs mission-built analysis
 
 **Request:**
 ```json
